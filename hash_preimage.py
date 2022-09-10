@@ -9,28 +9,28 @@ def hash_preimage(target_string):
         return
 
     source = string.ascii_letters + string.digits
-    random_number = random.randint(1, 10)
-    ran_str = ""
-    i = 0
-    while i < random_number:
+    start = ""
+    m = hashlib.sha256()
+    while True:
         char = random.choice(source)
-        ran_str += char
-        i += 1
-    result = hashlib.sha256(ran_str.encode('utf-8')).hexdigest()
-    same = count_trailing_same(result, target_string)
-    nonce = same
+        start += char
+        m.update(char.encode('utf-8'))
+        new_hex = m.hexdigest()
+        if same_bits(new_hex, target_string):
+            break
+    nonce = bytes(start, 'utf-8')
     return( nonce )
 
-def count_trailing_same(bit, bit_str):
+def same_bits(bit, bit_str):
     bit = int(bit, 16)
     bit = bin(bit)[2:]
     bit = bit[::-1]
     bit_str = bit_str[::-1]
-    same = 0
     for i in range(min(len(bit), len(bit_str))):
         if bit[i] == bit_str[i]:
-            same += 1
+            continue
         else:
-            break
-    return same
+            return False
+    return True
+
 
