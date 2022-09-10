@@ -18,7 +18,7 @@ def hash_preimage(target_string):
         i += 1
     result = hashlib.sha256(ran_str.encode('utf-8')).hexdigest()
     same = count_trailing_same(result, target_string)
-    nonce = str(same).encode()
+    nonce = same
     return( nonce )
 
 def count_trailing_same(bit, bit_str):
